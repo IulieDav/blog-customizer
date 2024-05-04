@@ -21,7 +21,7 @@ export const useOutsideClickClose = ({
 				onChange?.(false);
 			}
 		};
-
+ 
 		window.addEventListener('click', handleClick);
 
 		return () => {
