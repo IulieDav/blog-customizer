@@ -24,7 +24,7 @@ export type articleProps = {
 };
 
 export const ArticleParamsForm = ({ onSubmit, onReset }: articleProps) => {
-	const [isOpen, setOpen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [fontFamily, setFontFamily] = useState<OptionType>(
 		defaultArticleState.fontFamilyOption
 	);
@@ -43,7 +43,7 @@ export const ArticleParamsForm = ({ onSubmit, onReset }: articleProps) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	const toggleForm = () => {
-		setOpen((prev) => !prev);
+		setIsMenuOpen((prev) => !prev);
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -69,26 +69,26 @@ export const ArticleParamsForm = ({ onSubmit, onReset }: articleProps) => {
 		setContentWidth(defaultArticleState.contentWidth);
 	};
 
-	const handleClickOutside = (event: MouseEvent) => {
-		if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-			setOpen(false);
-		}
-	};
-
 	useEffect(() => {
+		if (!isMenuOpen) return;
+		const handleClickOutside = (event: MouseEvent) => {
+			if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+				setIsMenuOpen(false);
+			}
+		};
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, []);
+	}, [isMenuOpen]);
 
 	return (
 		<>
 			<div ref={rootRef}>
-				<ArrowButton isOpen={isOpen} onClick={toggleForm} />
+				<ArrowButton isOpen={isMenuOpen} onClick={toggleForm} />
 				<aside
 					className={clsx(styles.container, {
-						[styles.container_open]: isOpen,
+						[styles.container_open]: isMenuOpen,
 					})}>
 					<form className={styles.form} onSubmit={handleSubmit}>
 						<Text as='h2' size={31} weight={800} uppercase>
